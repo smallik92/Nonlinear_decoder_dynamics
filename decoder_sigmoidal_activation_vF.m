@@ -115,8 +115,7 @@ while(iter<=max_Iters && Error>Tol)
     y_vec = y_vec+step_size(iter)*y_perturb_vec;
     
     %Step 5b: Update state vector
-%    omega_vec = evolve_system(C, friction, b_Matrix, y_vec, omega_init, sigma, x_baseline, target);
-     omega_vec = omega_vec + omega_perturb_vec;
+    omega_vec = omega_vec + omega_perturb_vec;
     
     %Step 6a: Compute error
     Error = norm(omega_vec-omega_vec_cache{iter}, 'Fro');
@@ -129,10 +128,10 @@ while(iter<=max_Iters && Error>Tol)
     vel = omega_vec(m_dim+1:2*m_dim,:);
     x_response = x_baseline+omega_vec(2*m_dim+1:end,:);
     
-%     figure(1)
-%     plot(pos(1,:), pos(2,:),'LineWidth',0.5, 'Color', [0,color_spec(iter), 0]); title(num2str(iter-1)); %axis([0 1 0 1]);
-%     hold on; plot(0:0.1:1.2, 0:0.1:1.2, '--k','LineWidth',1.5); 
-%     axis tight
+    figure(1)
+    plot(pos(1,:), pos(2,:),'LineWidth',0.5, 'Color', [0,color_spec(iter), 0]); title(num2str(iter-1)); %axis([0 1 0 1]);
+    hold on; plot(0:0.1:1.2, 0:0.1:1.2, '--k','LineWidth',1.5); 
+    axis tight
     
     if iter>=2
        omega_perturb_diff(iter) = norm(omega_perturb_vec_cache{iter} - omega_perturb_vec_cache{iter - 1});
@@ -158,16 +157,8 @@ hold off
 figure(14),
 plot(1:iter, omega_diff, '-s', 'LineWidth', 1.2);
 xlim([1, iter]);
-% ylabel('||\omega_k - \omega_{k-1}||_{Fro}')
 hold on
 plot(2:iter, omega_perturb_diff(2:end), '-o', 'LineWidth', 1.2);
-% xlim([2, iter]);
-% ylabel('||\delta \omega_k - \delta \omega_{k-1}||_{Fro}')
-
-% figure(16),
-% plot(1:iter, omega_vec_2, '-o', 'LineWidth', 1.2);
-% xlim([2, iter]);
-% ylabel('||\omega_k||_{Fro}')
 
 figure(17),
 plot(1:iter, omega_perturb_vec_2, '-o', 'LineWidth', 1.2);
@@ -188,18 +179,10 @@ plotshaded(t_steps, x_response(pure_stim_A+1:stim_A_num,:),'m');
 plotshaded(t_steps, x_response(stim_A_num+1:end,:),'r');
 xlim([0, T_end])
 hold off
-
-% figure(20)
-% polarplot(mean(x_response(1:pure_stim_A,:))-x_baseline,'b', 'LineWidth', 2);
-% hold on
-% polarplot(mean(x_response(pure_stim_A+1:stim_A_num,:))-x_baseline,'m', 'LineWidth', 2);
-% polarplot(mean(x_response(stim_A_num+1:end,:))- x_baseline,'r', 'LineWidth', 2);
 % 
 figure(22)
-% temp = mean(x_response)-x_baseline;
 polarhistogram(mean(x_response(1:stim_A_num,:)),10,'FaceColor','blue', 'LineStyle', 'None');
 hold on
-% polarhistogram(mean(x_response(pure_stim_A+1:stim_A_num,:)),10,'FaceColor','magenta', 'FaceAlpha', 0.5);
 polarhistogram(mean(x_response(stim_A_num+1:end,:)),10,'FaceColor','red','LineStyle', 'None');
 set(gca, 'RTickLabel', [], 'ThetaTickLabel', []);
 
